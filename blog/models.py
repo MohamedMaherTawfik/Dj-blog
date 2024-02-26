@@ -18,4 +18,6 @@ class Post(models.Model):
     def __str__(self):
         return self.tilte
     
-    
+class Comment(models.Model):
+    pass
+
