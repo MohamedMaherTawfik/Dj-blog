@@ -1,7 +1,9 @@
 from django.shortcuts import render,redirect
-from .models import Post
-from .forms import PostForm
+from .models import Post,Comment
+from .forms import PostForm,CommentForm
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -13,9 +15,19 @@ class Postlist(ListView): #default : template --> post_list
     model=Post                     # object_list
     
 #=======================
-def post_Detail(request,post_id):
-    data=Post.objects.get(id=post_id)
-    return render(request,'post_info.html',{"post":data})
+def post_Detail(request,pk):
+    data=Post.objects.get(id=pk)
+    post_comment=Comment.objects.filter(post=data)
+    if request.method=='POST':
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            myform=form.save(commit=False)
+            myform.user=request.user
+            myform.post= data
+            myform.save()
+    else:
+        form=CommentForm()  
+    return render(request,'blog/post_Detail.html',{"post":data,'form':form,'post_comment':post_comment})
 
 class PostDetail(DetailView):
     model=Post
@@ -68,3 +80,5 @@ def delete_post(request,post_id):
 class PostDelete(DeleteView):
     model=Post
     success_url='/blog'
+    
+    

@@ -2,7 +2,27 @@
 
 {{post}}
 
-<p>{{post.author}}</p>
+<p>{{post.author|safe}}</p>
 <p>{{post.created_date}}</p>
-<p>{{post.content}}</p>
-<img style="width: 40%;" src="{{post.image.url}}" alt="">
+<p>{{post.content|safe}}</p>
+<img style="width: 35%;" src="{{post.image.url}}" alt="">
+<hr>
+<h3>Comments</h3>
+
+<hr>
+<h3>Add New Comment</h3>
+
+<ul>
+{% for comment in post_comment %}
+    <li>
+        <h5>{{comment.user}} -: {{comment.comment}} -{{comment.create_at}}</h5>
+    </li>
+{% endfor %}
+</ul>
+
+<hr>
+<form method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Add Comment">
+</form>

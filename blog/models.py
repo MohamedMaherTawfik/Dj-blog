@@ -25,4 +25,5 @@ class Comment(models.Model):
     create_at=models.DateTimeField(default=timezone.now)
     
     def __str__(self):
-        return self.user
+        return str(self.user)
+
